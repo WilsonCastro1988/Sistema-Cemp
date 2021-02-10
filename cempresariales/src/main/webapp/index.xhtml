@@ -1,0 +1,989 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="#{layoutMB.template}" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	<ui:param name="renderBreadCrumb" value="false" />
+
+	<ui:define name="header">
+		<style>
+body .ui-panel.ui-widget.box-success.box-solid .ui-panel-title {
+	color: #fff;
+	font-size: small;
+}
+
+body .ui-panel.ui-widget.box-default.box-solid .ui-panel-title {
+	color: #fff;
+	font-size: small;
+}
+
+.ui-panel .ui-panel-actions {
+	float: right;
+	width: 30%;
+}
+
+.ui-progressbar-label {
+	color: white;
+}
+
+.ui-tabs .ui-tabs-panel {
+	border-width: 0;
+	padding: 1em 0em !important;
+	background: 0;
+}
+</style>
+
+
+	</ui:define>
+
+	<ui:define name="title">
+		<h2 class="align-center">
+			Reporte <span class="text-aqua"> <i> <a
+					href="https://github.com/adminfaces/admin-starter" target="_blank"
+					style="text-transform: none; text-decoration: none"> GRÁFICO </a>
+			</i>
+			</span> Gerencial!
+
+
+		</h2>
+
+	</ui:define>
+
+	<ui:define name="body">
+
+
+
+		<h:form>
+
+			<div class="ui-fluid">
+				<p:panelGrid columns="3" layout="grid"
+					columnClasses="ui-g-3,ui-g-5,ui-g-4">
+
+
+					<p:panelGrid columns="1" layout="grid" columnClasses="ui-g-12">
+
+
+
+						<h1>
+							<i class="fa fa-user text-info"></i> Cliente
+						</h1>
+						<p:selectOneMenu value="#{chartJsView.idCliente}"
+							style="width:100%" filter="true" filterMatchMode="contains">
+							<f:selectItems value="#{chartJsView.listCliente}" var="item"
+								itemLabel="#{item.nombreCliente}" itemValue="#{item.idCliente}" />
+						</p:selectOneMenu>
+
+						<h1>
+							<i class="fa fa-industry text-green"></i> Sector Industrial
+						</h1>
+						<p:selectOneMenu value="#{chartJsView.idSector}"
+							style="width:100%" filter="true" filterMatchMode="contains">
+							<f:selectItems value="#{chartJsView.listSector}" var="item"
+								itemLabel="#{item.nombreSector}" itemValue="#{item.idSector}" />
+						</p:selectOneMenu>
+
+
+						<h1>
+							<i class="fa fa-building text-red"></i> Empresa
+						</h1>
+						<p:selectOneMenu value="#{chartJsView.idEmpresa}"
+							style="width:100%" filter="true" filterMatchMode="contains">
+							<f:selectItems value="#{chartJsView.listEmpresa}" var="item"
+								itemLabel="#{item.nombreEmpresa}" itemValue="#{item.idEmpresa}" />
+						</p:selectOneMenu>
+
+						<p:dataTable value="#{chartJsView.listRango}" var="item"
+							styleClass="box box-solid box-default" reflow="true">
+							<f:facet name="header">
+								<p:outputLabel value="Indicador de Desempeño" />
+							</f:facet>
+							<p:column headerText="Rango">
+								<p:outputLabel
+									value="#{item.minimoRango} - #{item.maximoRango} %" />
+							</p:column>
+
+							<p:column headerText="Desempeño">
+								<p:outputLabel value="#{item.nombreRango} %" styleClass="label"
+									style="background-color: ##{item.colorRango}; font-size:small" />
+							</p:column>
+						</p:dataTable>
+
+						<h1>Filtros</h1>
+						<p:tabView>
+							<p:tab title="Rol">
+
+
+								<p:panel header="Fechas" styleClass="box box-info">
+									<f:facet name="actions">
+
+										<p:panelGrid columns="3" layout="grid">
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-play text-primary" process="@this"
+												title="Play" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-refresh text-success" title="Refresh" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-trash text-danger" title="Quitar" />
+										</p:panelGrid>
+									</f:facet>
+									<p:outputLabel value="Inicio" />
+									<p:calendar value="#{chartJsView.filtroFecha}" />
+									<p:outputLabel value="Fin" />
+									<p:calendar value="#{chartJsView.filtroFecha}" />
+
+								</p:panel>
+
+
+
+								<p:panel header="Agencia (#{chartJsView.listAgencia.size()})"
+									styleClass="box box-info ui-panel-actions ui-panel">
+									<f:facet name="actions">
+
+										<p:panelGrid columns="3" layout="grid">
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-play text-primary" process="@this"
+												title="Play" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-refresh text-success" title="Refresh" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-trash text-danger" title="Quitar" />
+										</p:panelGrid>
+									</f:facet>
+
+
+
+									<p:dataTable value="#{chartJsView.listAgencia}" var="item"
+										rendered="false" selection="#{chartJsView.listAgenciaSelect}"
+										reflow="true" rowKey="#{item.idAgencia}" scrollRows="10"
+										scrollable="true" liveScroll="true" scrollHeight="150">
+										<p:column selectionMode="multiple"
+											style="width:30%;text-align:center" />
+										<p:column headerText="Agencia"
+											filterBy="#{item.nombreAgencia}"
+											sortBy="#{item.nombreAgencia}">
+											<p:outputLabel value="#{item.nombreAgencia}" />
+										</p:column>
+									</p:dataTable>
+
+									<p:selectOneListbox id="agencia"
+										value="#{chartJsView.idAgencia}" style="border:none">
+										<f:selectItems value="#{chartJsView.listAgencia}" var="item"
+											itemLabel="#{item.nombreAgencia}"
+											itemValue="#{item.idAgencia}" />
+									</p:selectOneListbox>
+								</p:panel>
+
+								<p:panel header="Area" styleClass="box box-info">
+									<f:facet name="actions">
+
+										<p:panelGrid columns="3" layout="grid">
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-play text-primary" process="@this"
+												title="Play" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-refresh text-success" title="Refresh" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-trash text-danger" title="Quitar" />
+										</p:panelGrid>
+									</f:facet>
+
+									<p:selectOneListbox filter="true" filterMatchMode="contains"
+										id="area" value="#{chartJsView.idArea}" style="border:none">
+										<f:selectItems value="#{chartJsView.listArea}" var="item"
+											itemLabel="#{item.nombreArea}" itemValue="#{item.idArea}" />
+									</p:selectOneListbox>
+								</p:panel>
+
+								<p:panel header="Roles" styleClass="box box-info">
+									<f:facet name="actions">
+
+										<p:panelGrid columns="3" layout="grid">
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-play text-primary" process="@this"
+												title="Play" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-refresh text-success" title="Refresh" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-trash text-danger" title="Quitar" />
+										</p:panelGrid>
+									</f:facet>
+
+									<p:selectOneListbox filter="true" filterMatchMode="contains"
+										id="rol" value="#{chartJsView.idRol}" style="border:none">
+										<f:selectItems value="#{chartJsView.listRol}" var="item"
+											itemLabel="#{item.nombreRol}" itemValue="#{item.idRol}" />
+									</p:selectOneListbox>
+								</p:panel>
+
+								<p:panel header="Empleados" styleClass="box box-info">
+									<f:facet name="actions">
+
+										<p:panelGrid columns="3" layout="grid">
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-play text-primary" process="@this"
+												title="Play" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-refresh text-success" title="Refresh" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-trash text-danger" title="Quitar" />
+										</p:panelGrid>
+									</f:facet>
+
+									<p:selectOneListbox filter="true" filterMatchMode="contains"
+										value="#{chartJsView.idRol}" style="border:none">
+										<f:selectItems value="#{chartJsView.listEmpleado}" var="item"
+											itemLabel="#{item.nombreEmpleado}"
+											itemValue="#{item.idEmpleado}" />
+									</p:selectOneListbox>
+								</p:panel>
+
+							</p:tab>
+							<p:tab title="Aspectos">
+
+								<p:panel header="CheckLists" styleClass="box box-info">
+									<f:facet name="actions">
+
+										<p:panelGrid columns="3" layout="grid">
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-play text-primary" process="@this"
+												title="Play" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-refresh text-success" title="Refresh" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-trash text-danger" title="Quitar" />
+										</p:panelGrid>
+									</f:facet>
+
+									<p:selectOneListbox filter="true" filterMatchMode="contains"
+										value="#{chartJsView.idRol}" style="border:none">
+										<f:selectItems value="#{chartJsView.listCheckList}" var="item"
+											itemLabel="#{item.nombreChecklist}"
+											itemValue="#{item.idChecklist}" />
+									</p:selectOneListbox>
+								</p:panel>
+
+								<p:panel header="Evaluaciones" styleClass="box box-info">
+									<f:facet name="actions">
+
+										<p:panelGrid columns="3" layout="grid">
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-play text-primary" process="@this"
+												title="Play" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-refresh text-success" title="Refresh" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-trash text-danger" title="Quitar" />
+										</p:panelGrid>
+									</f:facet>
+
+									<p:selectOneListbox filter="true" filterMatchMode="contains"
+										value="#{chartJsView.idRol}" style="border:none">
+										<f:selectItems value="#{chartJsView.listChecklistEvaluacion}"
+											var="item"
+											itemLabel="#{item.checklist.nombreChecklist} - #{item.evaluacion.fechaEvaluacion.toLocaleString()}"
+											itemValue="#{item.evaluacion.idEvaluacion}" />
+									</p:selectOneListbox>
+								</p:panel>
+
+								<p:panel header="Categorias" styleClass="box box-info">
+									<f:facet name="actions">
+
+										<p:panelGrid columns="3" layout="grid">
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-play text-primary" process="@this"
+												title="Play" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-refresh text-success" title="Refresh" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-trash text-danger" title="Quitar" />
+										</p:panelGrid>
+									</f:facet>
+
+									<p:selectManyMenu  filter="true" filterMatchMode="contains"
+										value="#{chartJsView.idRol}" style="border:none">
+										<f:selectItems value="#{chartJsView.listCategoria}" var="item"
+											itemLabel="#{item.nombreCategoria}"
+											itemValue="#{item.idCategoria}" />
+									</p:selectManyMenu >
+								</p:panel>
+
+								<p:panel header="Indicadores" styleClass="box box-info">
+									<f:facet name="actions">
+
+										<p:panelGrid columns="3" layout="grid">
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-play text-primary" process="@this"
+												title="Play" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-refresh text-success" title="Refresh" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-trash text-danger" title="Quitar" />
+										</p:panelGrid>
+									</f:facet>
+
+									<p:selectOneListbox filter="true" filterMatchMode="contains"
+										value="#{chartJsView.idRol}" style="border:none">
+										<f:selectItems value="#{chartJsView.listPregunta}" var="item"
+											itemLabel="#{item.nombrePregunta}"
+											itemValue="#{item.idPregunta}" />
+									</p:selectOneListbox>
+								</p:panel>
+
+
+							</p:tab>
+							<p:tab title="Segmentación">
+
+
+								<p:panel header="" styleClass="box box-info">
+									<f:facet name="header">
+										<i class="fa fa-map"></i>
+										<span>Región</span>
+									</f:facet>
+									<f:facet name="actions">
+
+										<p:panelGrid columns="3" layout="grid">
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-play text-primary" process="@this"
+												title="Play" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-refresh text-success" title="Refresh" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-trash text-danger" title="Quitar" />
+										</p:panelGrid>
+									</f:facet>
+
+									<p:selectOneListbox filter="true" filterMatchMode="contains"
+										value="#{chartJsView.idRegion}" style="border:none">
+										<f:selectItems value="#{chartJsView.listaRegion}" var="item"
+											itemLabel="#{item.nombreRegion}" itemValue="#{item.idRegion}" />
+									</p:selectOneListbox>
+								</p:panel>
+
+
+								<p:panel header="" styleClass="box box-info">
+									<f:facet name="header">
+										<i class="fa fa-navicon"></i>
+										<span>Zona</span>
+									</f:facet>
+									<f:facet name="actions">
+
+										<p:panelGrid columns="3" layout="grid">
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-play text-primary" process="@this"
+												title="Play" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-refresh text-success" title="Refresh" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-trash text-danger" title="Quitar" />
+										</p:panelGrid>
+									</f:facet>
+
+									<p:selectOneListbox filter="true" filterMatchMode="contains"
+										value="#{chartJsView.idZona}" style="border:none">
+										<f:selectItems value="#{chartJsView.listaZona}" var="item"
+											itemLabel="#{item.nombreZona}" itemValue="#{item.idZona}" />
+									</p:selectOneListbox>
+								</p:panel>
+
+								<p:panel header="" styleClass="box box-info">
+									<f:facet name="header">
+										<i class="fa fa-map-marker"></i>
+										<span>Provincia</span>
+									</f:facet>
+									<f:facet name="actions">
+
+										<p:panelGrid columns="3" layout="grid">
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-play text-primary" process="@this"
+												title="Play" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-refresh text-success" title="Refresh" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-trash text-danger" title="Quitar" />
+										</p:panelGrid>
+									</f:facet>
+
+									<p:selectOneListbox filter="true" filterMatchMode="contains"
+										value="#{chartJsView.idProvincia}" style="border:none">
+										<f:selectItems value="#{chartJsView.listaProvincia}"
+											var="item" itemLabel="#{item.nombreProvincia}"
+											itemValue="#{item.idProvincia}" />
+									</p:selectOneListbox>
+								</p:panel>
+
+								<p:panel header="" styleClass="box box-info">
+									<f:facet name="header">
+										<i class="fa fa-building"></i>
+										<span>Ciudad</span>
+									</f:facet>
+									<f:facet name="actions">
+
+										<p:panelGrid columns="3" layout="grid">
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-play text-primary" process="@this"
+												title="Play" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-refresh text-success" title="Refresh" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-trash text-danger" title="Quitar" />
+										</p:panelGrid>
+									</f:facet>
+
+									<p:selectOneListbox filter="true" filterMatchMode="contains"
+										value="#{chartJsView.idCiudad}" style="border:none">
+										<f:selectItems value="#{chartJsView.listaCiudad}" var="item"
+											itemLabel="#{item.nombreCiudad}" itemValue="#{item.idCiudad}" />
+									</p:selectOneListbox>
+								</p:panel>
+
+								<p:panel header="" styleClass="box box-info">
+									<f:facet name="header">
+										<i class="fa fa-navicon"></i>
+										<span>Zona Estructural</span>
+									</f:facet>
+									<f:facet name="actions">
+
+										<p:panelGrid columns="3" layout="grid">
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-play text-primary" process="@this"
+												title="Play" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-refresh text-success" title="Refresh" />
+											<p:commandLink style="width: inherit;"
+												styleClass="fa fa-trash text-danger" title="Quitar" />
+										</p:panelGrid>
+									</f:facet>
+
+									<p:selectOneListbox filter="true" filterMatchMode="contains"
+										value="#{chartJsView.idZonaE}" style="border:none">
+										<f:selectItems value="#{chartJsView.listaZonaE}" var="item"
+											itemLabel="#{item.nombreZonaEstructural}"
+											itemValue="#{item.idZonaEstructural}" />
+									</p:selectOneListbox>
+								</p:panel>
+
+
+							</p:tab>
+						</p:tabView>
+					</p:panelGrid>
+
+
+
+
+
+
+					<p:panelGrid columns="1" layout="grid" columnClasses="ui-g-12">
+						<div class="row">
+							<div class="col-lg-3 col-xs-6">
+								<!-- small box -->
+								<div class="small-box bg-aqua">
+									<div class="inner">
+										<h3>150</h3>
+
+										<p>Excelente</p>
+									</div>
+									<div class="icon">
+										<i class="fa fa-star"></i>
+									</div>
+									<a href="#" class="small-box-footer"> Más info <i
+										class="fa fa-arrow-circle-right"></i>
+									</a>
+								</div>
+							</div>
+							<!-- ./col -->
+							<div class="col-lg-3 col-xs-6">
+								<!-- small box -->
+								<div class="small-box bg-green">
+									<div class="inner">
+										<h3>
+											53<sup style="font-size: 20px">%</sup>
+										</h3>
+
+										<p>Aceptable</p>
+									</div>
+									<div class="icon">
+										<i class="fa fa-check"></i>
+									</div>
+									<a href="#" class="small-box-footer"> Más info <i
+										class="fa fa-arrow-circle-right"></i>
+									</a>
+								</div>
+							</div>
+							<!-- ./col -->
+							<div class="col-lg-3 col-xs-6">
+								<!-- small box -->
+								<div class="small-box bg-yellow">
+									<div class="inner">
+										<h3>44</h3>
+
+										<p>No Aceptable</p>
+									</div>
+									<div class="icon">
+										<i class="fa fa-ban"></i>
+									</div>
+									<a href="#" class="small-box-footer"> Más info <i
+										class="fa fa-arrow-circle-right"></i>
+									</a>
+								</div>
+							</div>
+							<!-- ./col -->
+							<div class="col-lg-3 col-xs-6">
+								<!-- small box -->
+								<div class="small-box bg-red">
+									<div class="inner">
+										<h3>65</h3>
+
+										<p>Alerta</p>
+									</div>
+									<div class="icon">
+										<i class="fa fa-warning"></i>
+									</div>
+									<a href="#" class="small-box-footer"> Más info <i
+										class="fa fa-arrow-circle-right"></i>
+									</a>
+								</div>
+							</div>
+							<!-- ./col -->
+						</div>
+
+						<p:panel header="Indicadores Nacionales Por Rol"
+							class="box-success box ">
+							<p:barChart model="#{chartJsView.barModel1}"
+								style="width: 50%; height: 100%;">
+								<p:ajax event="itemSelect" listener="#{chartJsView.itemSelect}"
+									update="@([id$=growl])" />
+							</p:barChart>
+						</p:panel>
+
+
+
+						<p:panel header="TOP 10 AGENCIAS" class="box-info box">
+
+							<p:barChart model="#{chartJsView.hbarModel}"
+								style="width: 100%; height: 320px;" />
+
+						</p:panel>
+
+						<p:panel header="Indicadores Nacionales Por Aspecto"
+							class="box-danger box ">
+
+
+							<p:barChart model="#{chartJsView.barModel2}"
+								style="width: 50%; height: 100%;">
+								<p:ajax event="itemSelect" listener="#{chartJsView.itemSelect}"
+									update="@([id$=growl])" />
+							</p:barChart>
+
+
+
+						</p:panel>
+
+						<p:panelGrid columns="2" layout="grid"
+							columnClasses="ui-g-6,ui-g-6">
+							<p:panel header="Indicadores Nacionales por ROL"
+								class="box-success box box-solid">
+								<p:barChart model="#{chartJsView.barModel1}"
+									style="width: 50%; height: 100%;">
+									<p:ajax event="itemSelect" listener="#{chartJsView.itemSelect}"
+										update="@([id$=growl])" />
+								</p:barChart>
+							</p:panel>
+
+							<p:panel header="Aspecto Por Rol"
+								class="box-success box box-solid">
+								<p:barChart model="#{chartJsView.barModel1}"
+									style="width: 50%; height: 100%;">
+									<p:ajax event="itemSelect" listener="#{chartJsView.itemSelect}"
+										update="@([id$=growl])" />
+								</p:barChart>
+							</p:panel>
+
+
+						</p:panelGrid>
+
+
+
+
+
+
+					</p:panelGrid>
+
+					<p:panelGrid columns="1" layout="grid">
+						<div class="direct-chat-msg left">
+							<div class="direct-chat-info clearfix">
+								<span class="direct-chat-name pull-left">Sarah Bullock</span> <span
+									class="direct-chat-timestamp pull-right">23 Jan 2:05 pm</span>
+							</div>
+							<!-- /.direct-chat-info -->
+							<img class="direct-chat-img"
+								src="https://adminlte.io/themes/AdminLTE/dist/img/user7-128x128.jpg"
+								alt="Message User Image" />
+							<!-- /.direct-chat-img -->
+							<div class="direct-chat-text"
+								style="background: #f39c12; border-color: #f39c12; color: #fff;">Protocolos
+								de Atención al Cliente</div>
+							<!-- /.direct-chat-text -->
+						</div>
+
+						<p:panelGrid columns="1" layout="grid" id="pnlPlantillas"
+							columnClasses="ui-grid-col-12">
+
+
+							<ui:repeat var="item" value="#{chartJsView.listaResp}">
+
+								<p:panel style="text-align:left"
+									styleClass="box box-solid box-default"
+									header="#{item.categoria.idCategoria} - #{item.categoria.nombreCategoria}">
+
+
+
+									<p:panelGrid columns="1" layout="grid">
+										<p:panelGrid columns="4" layout="grid"
+											styleClass="box box-solid box-info"
+											columnClasses="
+										ui-grid-col-9,
+										ui-grid-col-1,
+										ui-grid-col-1,
+										ui-grid-col-1">
+											<h:outputText value="Pregunta / Atributo" />
+											<h:outputText value="0 %" />
+											<h:outputText value="50 %" />
+											<h:outputText value="100 %" />
+										</p:panelGrid>
+										<ui:repeat var="respuesta"
+											value="#{item.listaContenidoRespuesta}">
+											<p:panelGrid columns="2" layout="grid"
+												columnClasses="
+										ui-grid-col-9,
+										ui-grid-col-3">
+
+												<h:outputText
+													value="#{respuesta.catalogoPregunta.pregunta.nombrePregunta}" />
+												<div class="progress" style="height: 15px;">
+													<div class="progress-bar progress-bar-green"
+														style="width: #{respuesta.respuesta.valorCalculadoRespuesta}%;">#{respuesta.respuesta.valorCalculadoRespuesta}%</div>
+												</div>
+											</p:panelGrid>
+											<p:separator />
+										</ui:repeat>
+
+
+
+
+									</p:panelGrid>
+								</p:panel>
+							</ui:repeat>
+
+						</p:panelGrid>
+					</p:panelGrid>
+
+				</p:panelGrid>
+			</div>
+
+		</h:form>
+
+
+
+		<h:form>
+
+
+			<p:growl id="growl" showDetail="true" />
+
+			<p:panelGrid columns="2" layout="grid" columnClasses="ui-g-3,ui-g-9">
+				<p:outputLabel value="" />
+				<p:selectOneButton value="#{chartJsView.mes}">
+					<f:selectItem itemLabel="ENE" itemValue="enero" />
+					<f:selectItem itemLabel="FEB" itemValue="febrero" />
+					<f:selectItem itemLabel="MAR" itemValue="marzo" />
+					<f:selectItem itemLabel="ABR" itemValue="abril" />
+					<f:selectItem itemLabel="MAY" itemValue="mayo" />
+					<f:selectItem itemLabel="JUN" itemValue="junio" />
+					<f:selectItem itemLabel="JUL" itemValue="julio" />
+					<f:selectItem itemLabel="AGO" itemValue="agosto" />
+					<f:selectItem itemLabel="SEP" itemValue="septiembre" />
+					<f:selectItem itemLabel="OCT" itemValue="octubre" />
+					<f:selectItem itemLabel="NOV" itemValue="noviembre" />
+					<f:selectItem itemLabel="DIC" itemValue="diciembre" />
+				</p:selectOneButton>
+			</p:panelGrid>
+
+			<p:panelGrid columns="3" layout="grid"
+				columnClasses="ui-g-3,ui-g-4,ui-g-5"
+				styleClass="ui-panelgrid-blank ui-fluid">
+				<p:panel header="INDICE GENERAL" class="box-success box box-solid">
+					<p:outputLabel value="META: 98%" />
+					<br />
+					<p:outputLabel value="FEBRERO" />
+
+					<p:chart type="metergauge" model="#{chartView.meterGaugeModel1}"
+						style="width:100%;height:200px" />
+				</p:panel>
+
+				<p:panel header="ENCUESTA DE BIENVENIDA [20%]"
+					class="box-default box box-solid">
+					<p:panelGrid columns="2" layout="grid"
+						columnClasses="ui-g-4,ui-g-8">
+						<p:donutChart model="#{chartJsView.donutModel}"
+							style="width: 50%; height: 100%;" />
+
+						<p:barChart model="#{chartJsView.barModel2}"
+							style="width: 50%; height: 100%;">
+							<p:ajax event="itemSelect" listener="#{chartJsView.itemSelect}"
+								update="growl" />
+						</p:barChart>
+
+						<!-- <p:panelGrid columns="1" layout="tabular" style="width: 100%; height: 100%;" >
+                            <p:knob colorTheme="hot-sneaks" value="45" width="80%" height="100%"/>
+                        </p:panelGrid> -->
+					</p:panelGrid>
+
+				</p:panel>
+
+				<p:panel header="CLIENTE FANTASMA [30%]"
+					class="box-default box box-solid">
+					<p:panelGrid columns="2" layout="grid"
+						columnClasses="ui-g-4,ui-g-8">
+						<p:donutChart model="#{chartJsView.donutModel}"
+							style="width: 50%; height: 100%;" />
+						<p:barChart model="#{chartJsView.barModel2}"
+							style="width: 50%; height: 100%;">
+							<p:ajax event="itemSelect" listener="#{chartJsView.itemSelect}"
+								update="growl" />
+						</p:barChart>
+					</p:panelGrid>
+				</p:panel>
+
+
+				<p:panel header="TOP 10 AGENCIAS" class="box-success box box-solid">
+
+					<p:barChart model="#{chartJsView.hbarModel}"
+						style="width: 100%; height: 300px;" />
+
+				</p:panel>
+
+				<p:panel header="TELEFONÍA [10%]" class="box-default box box-solid">
+
+					<p:donutChart model="#{chartJsView.donutModel}"
+						style="width: 50%; height: 100%;" />
+
+
+				</p:panel>
+
+				<p:panel header="ENCUESTA DE LEALTAD [40%]"
+					class="box-default box box-solid">
+					<p:panelGrid columns="2" layout="grid"
+						columnClasses="ui-g-4,ui-g-8">
+						<p:donutChart model="#{chartJsView.donutModel}"
+							style="width: 50%; height: 100%;" />
+						<p:barChart model="#{chartJsView.barModel2}"
+							style="width: 50%; height: 100%;">
+							<p:ajax event="itemSelect" listener="#{chartJsView.itemSelect}"
+								update="growl" />
+						</p:barChart>
+					</p:panelGrid>
+				</p:panel>
+			</p:panelGrid>
+
+
+			<p:panelGrid columns="2" layout="grid" columnClasses="ui-g-3,ui-g-9"
+				styleClass="ui-panelgrid-blank ui-fluid">
+				<p:panel header="MES" class="box-success box box-solid">
+					<p:selectManyButton value="#{chartJsView.selectedOptions}"
+						style="overflow-x: scroll">
+						<f:selectItem itemLabel="ENE" itemValue="enero" />
+						<f:selectItem itemLabel="FEB" itemValue="febrero" />
+						<f:selectItem itemLabel="MAR" itemValue="marzo" />
+						<f:selectItem itemLabel="ABR" itemValue="abril" />
+						<f:selectItem itemLabel="MAY" itemValue="mayo" />
+						<f:selectItem itemLabel="JUN" itemValue="junio" />
+						<f:selectItem itemLabel="JUL" itemValue="julio" />
+						<f:selectItem itemLabel="AGO" itemValue="agosto" />
+						<f:selectItem itemLabel="SEP" itemValue="septiembre" />
+						<f:selectItem itemLabel="OCT" itemValue="octubre" />
+						<f:selectItem itemLabel="NOV" itemValue="noviembre" />
+						<f:selectItem itemLabel="DIC" itemValue="diciembre" />
+					</p:selectManyButton>
+				</p:panel>
+
+				<p:panel header="ZONA" class="box-success box box-solid">
+					<p:panelGrid columns="4" layout="grid">
+						<p:commandButton styleClass="btn btn-outline-success "
+							value="ZONA COSTA CENTRO" />
+						<p:commandButton value="ZONA COSTA NORTE" />
+						<p:commandButton value="ZONA GUAYAQUIL 1" />
+						<p:commandButton value="ZONA GUAYAQUIL 2" />
+						<p:commandButton value="ZONA MACHALA" />
+						<p:commandButton value="ZONA QUITO 1" />
+						<p:commandButton value="ZONA QUITO 2" />
+						<p:commandButton value="ZONA QUITO 3" />
+						<p:commandButton value="ZONA SIERRA CENTRO" />
+						<p:commandButton value="ZONA SIERRA NORTE" />
+						<p:commandButton value="ZONA SIERRA SUR" />
+					</p:panelGrid>
+					<p:panel>
+						<p:barChart model="#{chartJsView.barModel1}"
+							style="width: 50%; height: 100%;">
+							<p:ajax event="itemSelect" listener="#{chartJsView.itemSelect}"
+								update="growl" />
+						</p:barChart>
+					</p:panel>
+				</p:panel>
+
+				<p:panel class="box-success box box-solid">
+
+					<p:barChart model="#{chartJsView.hbarModel}"
+						style="width: 100%; height: 400px;" />
+
+				</p:panel>
+
+				<p:panelGrid columns="4" layout="grid">
+					<p:panel style="height: 100%" header="CLIENTE FANTASMA"
+						class="box-success box box-solid">
+						<p:donutChart model="#{chartJsView.donutModel}"
+							style="width: 50%; height: 100%;" />
+					</p:panel>
+					<p:panel style="height: 100%" header="ENCUESTA LEALTAD"
+						class="box-success box box-solid">
+						<p:donutChart model="#{chartJsView.donutModel}"
+							style="width: 50%; height: 100%;" />
+					</p:panel>
+					<p:panel style="height: 100%;" header="TELEFONIA"
+						class="box-success box box-solid">
+						<p:donutChart model="#{chartJsView.donutModel}"
+							style="width: 50%; height: 100%;" />
+					</p:panel>
+					<p:panel style="height: 100%" header="ENCUESTA DE BIENVENIDA"
+						class="box-success box box-solid">
+						<p:donutChart model="#{chartJsView.donutModel}"
+							style="width: 50%; height: 100%;" />
+					</p:panel>
+				</p:panelGrid>
+			</p:panelGrid>
+
+			<p:panelGrid columns="3" layout="grid"
+				columnClasses="ui-g-6,ui-g-3,ui-g-3"
+				styleClass="ui-panelgrid-blank ui-fluid">
+				<p:panel header="CLIENTE FANTASMA" class="box-success box box-solid">
+					<p:barChart model="#{chartJsView.barModel1}"
+						style="width: 50%; height: 100%;">
+						<p:ajax event="itemSelect" listener="#{chartJsView.itemSelect}"
+							update="growl" />
+					</p:barChart>
+				</p:panel>
+
+				<p:panel header="ENCUESTA LEALTAD" class="box-success box box-solid">
+					<p:donutChart model="#{chartJsView.donutModel}"
+						style="width: 50%; height: 100%;" />
+
+				</p:panel>
+
+				<p:panel header="ENCUESTA BIENVENIDA"
+					class="box-success box box-solid">
+					<p:barChart model="#{chartJsView.barModel2}"
+						style="width: 50%; height: 100%;">
+						<p:ajax event="itemSelect" listener="#{chartJsView.itemSelect}"
+							update="growl" />
+					</p:barChart>
+				</p:panel>
+			</p:panelGrid>
+
+			<p:panelGrid columns="2" layout="grid" columnClasses="ui-g-4,ui-g-8"
+				styleClass="ui-panelgrid-blank ui-fluid">
+				<p:panelGrid columns="1" layout="grid">
+					<p:panel header="CIUDAD" class="box-success box box-solid">
+						<h:outputLabel for="cuidad"
+							value="Seleccione al  Menos una Ciudad:" />
+						<p:selectCheckboxMenu id="ciudad"
+							value="#{chartJsView.selectedCities2}" label="Agencias"
+							multiple="true" filter="true" filterMatchMode="startsWith"
+							panelStyle="width:250px">
+							<f:selectItem itemLabel="MANTA" itemValue="MANTA" />
+						</p:selectCheckboxMenu>
+					</p:panel>
+					<p:panel header="AGENCIA" class="box-success box box-solid">
+						<h:outputLabel for="agencia1"
+							value="Seleccione al  Menos una Agencia:" />
+						<p:selectCheckboxMenu id="agencia1"
+							value="#{chartJsView.selectedCities2}" label="Agencias"
+							multiple="true" filter="true" filterMatchMode="startsWith"
+							panelStyle="width:250px">
+							<f:selectItems value="#{chartJsView.cities}" />
+						</p:selectCheckboxMenu>
+					</p:panel>
+					<p:panel header="AGENCIA" class="box-success box box-solid">
+						<h:outputLabel for="agencia2"
+							value="Seleccione al  Menos una Agencia:" />
+						<p:selectCheckboxMenu id="agencia2"
+							value="#{chartJsView.selectedCities2}" label="Agencias"
+							multiple="true" filter="true" filterMatchMode="startsWith">
+							<f:selectItems itemLabel="#{item}" itemDescription="#{item}"
+								var="item" value="#{chartJsView.cities}" />
+
+						</p:selectCheckboxMenu>
+
+					</p:panel>
+
+					<p:panel header="COMPARATIVA ULTIMOS 2 AÑOS"
+						styleClass="box box-solid box-success">
+						<p:radarChart style="width: 150%; height: 700px"
+							model="#{chartJsView.radarModel}" />
+
+					</p:panel>
+				</p:panelGrid>
+				<p:panelGrid columns="1" layout="grid">
+
+					<p:panel styleClass="ui-panelgrid-blank ui-fluid"
+						header="DETALLE DE LOS INDICADORES"
+						class="box box-solid box-default">
+						<p:panelGrid columns="2" layout="grid"
+							columnClasses="ui-g-6,ui-g-6"
+							styleClass="ui-panelgrid-blank ui-fluid">
+
+							<p:panel header="CLIENTE FANTASMA [META - 92%]">
+								<p:barChart model="#{chartJsView.barModel1}"
+									style="width: 50%; height: 100%;">
+									<p:ajax event="itemSelect" listener="#{chartJsView.itemSelect}"
+										update="growl" />
+								</p:barChart>
+							</p:panel>
+
+							<p:panel header="ENCUESTA DE LEALTAD [META - 85%]">
+								<p:donutChart model="#{chartJsView.donutModel}"
+									style="width: 50%; height: 100%;" />
+							</p:panel>
+							<p:panel header="ENCUESTA DE BIENVENIDA [META - 95%]">
+								<p:donutChart model="#{chartJsView.donutModel}"
+									style="width: 50%; height: 100%;" />
+							</p:panel>
+							<p:panel header="TELEFONIA [META - 96%]">
+								<p:donutChart model="#{chartJsView.donutModel}"
+									style="width: 50%; height: 100%;" />
+							</p:panel>
+
+
+							<p:panel
+								header="ENCUESTA DE BIENVENIDA [META - 95%]/[PROMEDIO - 95%]">
+								<p:lineChart model="#{chartJsView.lineModel}"
+									style="width: 100%; height: 500px;" />
+							</p:panel>
+							<p:panel header="CLIENTE FANTASMA [META - 92%]/[PROMEDIO - 79%]">
+								<p:lineChart model="#{chartJsView.lineModel}"
+									style="width: 100%; height: 500px;" />
+							</p:panel>
+
+						</p:panelGrid>
+					</p:panel>
+
+				</p:panelGrid>
+			</p:panelGrid>
+
+		</h:form>
+
+
+
+	</ui:define>
+
+
+</ui:composition>
